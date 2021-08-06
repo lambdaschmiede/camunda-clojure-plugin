@@ -7,4 +7,4 @@ workflows:
   test-and-build:
     jobs:
       - maven/test:
-          command: '-v'
+          verify_dependencies: false
