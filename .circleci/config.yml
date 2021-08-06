@@ -8,6 +8,7 @@ jobs:
     docker:
       - image: circleci/openjdk:stretch
     steps:
+      - checkout
       - run: mvn test
 
 workflows:
