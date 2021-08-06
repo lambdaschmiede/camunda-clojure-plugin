@@ -5,8 +5,9 @@ orbs:
 
 jobs:
   test:
-    command:
-      - mvn test
+    steps:
+      command:
+        - mvn test
 
 workflows:
   test-and-build:
