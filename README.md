@@ -20,6 +20,18 @@ This has the following benefits:
 * No Java Interop Code. We can define our delegates as plain clojure functions
 * Full REPL integration. We can adjust the Clojure delegate functions in the REPL on the fly and test them instantly with Camunda
 
+## How can it be used?
+When bootstrapping the Camunda engine in your Clojure program, you have to add the plugin class to the engine like this: 
+
+``` clojure
+(-> engine-config
+    (.getProcessEnginePlugins)
+    (.add (com.lambdaschmiede.camunda.clojure.CamundaProcessEnginePlugin.)))
+```
+
+The library is not yet available via Clojars / Maven Public repo, but we are working on that.
+
+
 ## How stable is this? 
 Currently this implementation is only used by @lambdaschmiede itself, although are presenting it to customers using Camunda. It works in our projects, and we will keep maintaining it to guarantee a stable library for our own use.
 
