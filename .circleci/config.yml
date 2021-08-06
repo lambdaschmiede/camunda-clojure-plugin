@@ -3,8 +3,12 @@ version: 2.1
 orbs:
   maven: circleci/maven@1.2.0
 
+jobs:
+  test:
+    command:
+      - mvn test
+
 workflows:
   test-and-build:
     jobs:
-      - maven/test:
-          verify_dependencies: false
+      - test
