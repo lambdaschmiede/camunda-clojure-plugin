@@ -1,5 +1,5 @@
 # camunda-clojure-plugin
-A Camunda Process Engine Plugin to execute Clojure Functions as Delegtes
+A Camunda Process Engine Plugin to execute Clojure Functions as Delegates
 
 ## Why do we need this?
 While Camunda is tightly integrated with Java, using it with Clojure could be more elegant. If we want to call Clojure code as a Delegate, we need to create and compile a Java class from Clojure, so that it can be found by Camunda via the classloader. This does not go well with the REPL development flow. This project is an approach to call pure Clojure functions from Camunda process instances, without having to extend BPMN or Camunda itself.
@@ -9,9 +9,9 @@ This Process Engine plugin registers a `org.camunda.bpm.engine.impl.javax.el.Fun
 
 ```clojure
 (defn test-delegate [execution]
-    (do
-        (println (str "The instance is " (.getProcessInstanceId execution)))
-        (.setVariable execution "var-name" 2)))
+  (do
+    (println (str "The instance is " (.getProcessInstanceId execution)))
+    (.setVariable execution "var-name" 2)))
 ```
 
 This has the following benefits:
@@ -33,5 +33,5 @@ The library is not yet available via Clojars / Maven Public repo, but we are wor
 
 
 ## How stable is this? 
-Currently this implementation is only used by @lambdaschmiede itself, although are presenting it to customers using Camunda. It works in our projects, and we will keep maintaining it to guarantee a stable library for our own use.
+Currently this implementation is only used by lambdaschmiede itself, although are presenting it to customers using Camunda. It works in our projects, and we will keep maintaining it to guarantee a stable library for our own use.
 
