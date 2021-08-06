@@ -7,7 +7,7 @@
         </property>
         <property name="processEnginePlugins">
             <list><!--Beans - very irritating -->
-                <bean class="com.lambdaschmiede.camunda.clojure.CamundaProcessEnginePlugin"/>
+                <bean class="com.lambdaschmiede.camunda.clojure.ClojureProcessEnginePlugin"/>
             </list>
         </property>
     </bean>

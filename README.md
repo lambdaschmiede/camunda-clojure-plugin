@@ -26,7 +26,7 @@ When bootstrapping the Camunda engine in your Clojure program, you have to add t
 ``` clojure
 (-> engine-config
     (.getProcessEnginePlugins)
-    (.add (com.lambdaschmiede.camunda.clojure.CamundaProcessEnginePlugin.)))
+    (.add (com.lambdaschmiede.camunda.clojure.ClojureProcessEnginePlugin.)))
 ```
 
 The library is not yet available via Clojars / Maven Public repo, but we are working on that.

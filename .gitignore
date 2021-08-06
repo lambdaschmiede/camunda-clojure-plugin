@@ -3,6 +3,9 @@
 target/
 .idea/
 *.iml
+.project
+.classpath
+.settings/
 # Log file
 *.log
 
