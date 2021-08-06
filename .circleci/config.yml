@@ -6,4 +6,5 @@ orbs:
 workflows:
   test-and-build:
     jobs:
-      - maven/test
+      - maven/test:
+          command: '-v'
