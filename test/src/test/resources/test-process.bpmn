@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_13ud1hz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_13ud1hz" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
   <bpmn:process id="Process_TestProcess" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1" name="Start Test">
+    <bpmn:startEvent id="StartEvent_1" name="Test started">
       <bpmn:outgoing>Flow_09o9z38</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_09o9z38" sourceRef="StartEvent_1" targetRef="Activity_Test_01" />
-    <bpmn:endEvent id="Event_0lj3w0r" name="End">
-      <bpmn:incoming>Flow_1l02w3e</bpmn:incoming>
+    <bpmn:endEvent id="Event_PositiveValue" name="Positive value set">
+      <bpmn:incoming>Flow_041ey5f</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1l02w3e" sourceRef="Activity_Test_01" targetRef="Event_0lj3w0r" />
-    <bpmn:serviceTask id="Activity_Test_01" name="Call 2nd Activity" camunda:delegateExpression="#{clj(&#39;camunda-clojure-plugin.delegate/test-delegate&#39;)}">
+    <bpmn:sequenceFlow id="Flow_1l02w3e" sourceRef="Activity_Test_01" targetRef="Gateway_076jc02" />
+    <bpmn:serviceTask id="Activity_Test_01" name="Subtract 10" camunda:delegateExpression="#{clj:delegate(&#39;camunda-clojure-plugin.delegate/test-delegate&#39;)}">
       <bpmn:extensionElements>
         <camunda:properties>
           <camunda:property name="clojure" />
@@ -18,31 +18,72 @@
       <bpmn:incoming>Flow_09o9z38</bpmn:incoming>
       <bpmn:outgoing>Flow_1l02w3e</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_076jc02" name="Value positive?">
+      <bpmn:incoming>Flow_1l02w3e</bpmn:incoming>
+      <bpmn:outgoing>Flow_041ey5f</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0dsck12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_041ey5f" name="yes" sourceRef="Gateway_076jc02" targetRef="Event_PositiveValue">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${clj:function('clojure.core/pos?', myvar)}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_NegativeValue" name="Negative value set">
+      <bpmn:incoming>Flow_0dsck12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0dsck12" name="no" sourceRef="Gateway_076jc02" targetRef="Event_NegativeValue">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${not clj:function('clojure.core/pos?', myvar)}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_TestProcess">
       <bpmndi:BPMNEdge id="Flow_1l02w3e_di" bpmnElement="Flow_1l02w3e">
-        <di:waypoint x="460" y="117" />
-        <di:waypoint x="592" y="117" />
+        <di:waypoint x="380" y="117" />
+        <di:waypoint x="475" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_09o9z38_di" bpmnElement="Flow_09o9z38">
         <di:waypoint x="215" y="117" />
-        <di:waypoint x="360" y="117" />
+        <di:waypoint x="280" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_041ey5f_di" bpmnElement="Flow_041ey5f">
+        <di:waypoint x="525" y="117" />
+        <di:waypoint x="712" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="610" y="99" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dsck12_di" bpmnElement="Flow_0dsck12">
+        <di:waypoint x="500" y="142" />
+        <di:waypoint x="500" y="230" />
+        <di:waypoint x="712" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="612" y="203" width="13" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="174" y="142" width="47" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0lj3w0r_di" bpmnElement="Event_0lj3w0r">
-        <dc:Bounds x="592" y="99" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="600" y="142" width="20" height="14" />
+          <dc:Bounds x="169" y="142" width="57" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1htgaow_di" bpmnElement="Activity_Test_01">
-        <dc:Bounds x="360" y="77" width="100" height="80" />
+        <dc:Bounds x="280" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0lj3w0r_di" bpmnElement="Event_PositiveValue">
+        <dc:Bounds x="712" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="687" y="142" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_076jc02_di" bpmnElement="Gateway_076jc02" isMarkerVisible="true">
+        <dc:Bounds x="475" y="92" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="464" y="62" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_01r4phf_di" bpmnElement="Event_NegativeValue">
+        <dc:Bounds x="712" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="694" y="255" width="73" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
