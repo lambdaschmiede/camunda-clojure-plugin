@@ -1,4 +1,5 @@
 (ns camunda-clojure-plugin.delegate)
 
 (defn test-delegate [execution]
-    (.setVariable execution "my-var" 2))
+  (let [{:strs [myvar]} (.getVariables execution)]
+    (.setVariable execution "myvar" (- myvar 10))))

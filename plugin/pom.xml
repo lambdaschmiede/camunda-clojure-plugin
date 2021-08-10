@@ -5,26 +5,50 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.lambdaschmiede</groupId>
-    <artifactId>camunda-clojure-plugin-main</artifactId>
-    <name>camunda-clojure-plugin-main</name>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>camunda-clojure-plugin</artifactId>
+    <name>camunda-clojure-plugin</name>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
-    <parent>
-        <relativePath>../pom.xml</relativePath>
-        <groupId>com.lambdaschmiede</groupId>
-        <artifactId>camunda-clojure-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <url>https://github.com/lambdaschmiede/camunda-clojure-plugin</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>lambdaschmiede GmbH</name>
+        <url>https://www.lambdaschmiede.com</url>
+    </organization>
+
+    <scm>
+        <url>https://github.com/lambdaschmiede/camunda-clojure-plugin</url>
+        <connection>scm:git:git@github.com:lambdaschmiede/camunda-clojure-plugin.git</connection>
+    </scm>
 
     <packaging>jar</packaging>
 
-    <dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.camunda.bpm</groupId>
+                <artifactId>camunda-bom</artifactId>
+                <version>7.15.0</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
+    <dependencies>
         <dependency>
             <!-- process engine, needs to be provided -->
             <groupId>org.camunda.bpm</groupId>
@@ -38,7 +62,6 @@
             <version>1.10.3</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -61,5 +84,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>clojars</id>
+            <name>Clojars repository</name>
+            <url>https://clojars.org/repo</url>
+        </repository>
+    </distributionManagement>
 
 </project>

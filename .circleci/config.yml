@@ -1,9 +1,17 @@
 version: 2.1
 
 orbs:
-  maven: circleci/maven@0.0.12
+  maven: circleci/maven@1.2.0
+
+jobs:
+  test:
+    docker:
+      - image: circleci/openjdk:stretch
+    steps:
+      - checkout
+      - run: mvn test
 
 workflows:
   test-and-build:
     jobs:
-      - maven/test
+      - test
