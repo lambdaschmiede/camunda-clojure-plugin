@@ -48,7 +48,7 @@ The function `write-approval` in the namespace `myapp.camunda` then might look l
 
 ``` clojure
 (ns myapp.camunda
-  (:require [myabb.db :refer write-approval]))
+  (:require [myabb.db :refer [write-approval]]))
   
 (defn write-approval [execution]
   (let [{:strs requestee from to} (.getVariables execution)]
