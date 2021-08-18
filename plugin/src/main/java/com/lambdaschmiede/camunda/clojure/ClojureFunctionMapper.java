@@ -68,7 +68,10 @@ public class ClojureFunctionMapper extends FunctionMapper {
 
     public static Object function(String expression, Object... params) {
         int paramSize = params.length;
-        IFn fun = Clojure.var(expression);
+        String[] expressionParts = expression.split("/");
+        String ns = expressionParts[0];
+        String name = expressionParts[1];
+        IFn fun = Clojure.var(ns, name);
         switch (paramSize) {
             case 0:
                 return fun.invoke();
@@ -78,7 +81,12 @@ public class ClojureFunctionMapper extends FunctionMapper {
                 return fun.invoke(params[0], params[1]);
             case 3:
                 return fun.invoke(params[0], params[1], params[2]);
-            // TODO: Some more params would be nice, too
+            case 4:
+                return fun.invoke(params[0], params[1], params[2], params[3]);
+            case 5:
+                return fun.invoke(params[0], params[1], params[2], params[3], params[4]);
+            case 6:
+                return fun.invoke(params[0], params[1], params[2], params[3], params[4], params[5]);
             default:
                 throw new IllegalArgumentException(
                         String.format("Parameter size of %s is not allowed for a Clojure expression", paramSize));
