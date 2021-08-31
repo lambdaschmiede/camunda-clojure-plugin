@@ -22,7 +22,12 @@ import java.util.Map;
  */
 public class ClojureFunctionMapper extends FunctionMapper {
 
-    public static Map<String, Method> FUNCTION_MAP = new HashMap<>();
+    private static Map<String, Method> FUNCTION_MAP = new HashMap<>();
+    private static final IFn REQUIRE = Clojure.var("clojure.core", "require");
+    private static final String KEY_DELEGATE = "delegate";
+    private static final String KEY_FUNCTION = "function";
+    private static final String KEY_PREFIX = "clj";
+    private static final String NS_SEPARATOR = "/";
 
     /**
      * Camunda will query this method on a list of registered FunctionMapper
@@ -35,7 +40,7 @@ public class ClojureFunctionMapper extends FunctionMapper {
      */
     @Override
     public Method resolveFunction(String prefix, String localName) {
-        if (!"clj".equals(prefix)) {
+        if (!KEY_PREFIX.equals(prefix)) {
             return null;
         }
         initializeFunctionMapIfEmpty();
@@ -46,10 +51,10 @@ public class ClojureFunctionMapper extends FunctionMapper {
         if (FUNCTION_MAP.isEmpty()) {
             synchronized (CommandContextFunctionMapper.class) {
                 if (FUNCTION_MAP.isEmpty()) {
-                    FUNCTION_MAP.put("delegate",
-                            ReflectUtil.getMethod(ClojureFunctionMapper.class, "delegate", String.class));
-                    FUNCTION_MAP.put("function",
-                            ReflectUtil.getMethod(ClojureFunctionMapper.class, "function", String.class, Object[].class));
+                    FUNCTION_MAP.put(KEY_DELEGATE,
+                            ReflectUtil.getMethod(ClojureFunctionMapper.class, KEY_DELEGATE, String.class));
+                    FUNCTION_MAP.put(KEY_FUNCTION,
+                            ReflectUtil.getMethod(ClojureFunctionMapper.class, KEY_FUNCTION, String.class, Object[].class));
                 }
             }
         }
@@ -63,12 +68,21 @@ public class ClojureFunctionMapper extends FunctionMapper {
      * function with its DelegateExecution parameter passed as an argument.
      */
     public static JavaDelegate delegate(String expression) {
-        return execution -> Clojure.var(expression).invoke(execution);
+        return execution -> invokeClojureFunction(expression, execution);
     }
 
     public static Object function(String expression, Object... params) {
+        return invokeClojureFunction(expression, params);
+    }
+
+    private static Object invokeClojureFunction(String expression, Object... params) {
         int paramSize = params.length;
-        IFn fun = Clojure.var(expression);
+        String[] expressionParts = expression.split(NS_SEPARATOR);
+        String ns = expressionParts[0];
+        String name = expressionParts[1];
+        REQUIRE.invoke(Clojure.read(ns));
+
+        IFn fun = Clojure.var(ns, name);
         switch (paramSize) {
             case 0:
                 return fun.invoke();
@@ -78,11 +92,16 @@ public class ClojureFunctionMapper extends FunctionMapper {
                 return fun.invoke(params[0], params[1]);
             case 3:
                 return fun.invoke(params[0], params[1], params[2]);
-            // TODO: Some more params would be nice, too
+            case 4:
+                return fun.invoke(params[0], params[1], params[2], params[3]);
+            case 5:
+                return fun.invoke(params[0], params[1], params[2], params[3], params[4]);
+            case 6:
+                return fun.invoke(params[0], params[1], params[2], params[3], params[4], params[5]);
             default:
                 throw new IllegalArgumentException(
                         String.format("Parameter size of %s is not allowed for a Clojure expression", paramSize));
         }
-
     }
+
 }
